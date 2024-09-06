@@ -6,16 +6,16 @@ CC = gcc
 CFLAGS = -fno-stack-protector -ffreestanding -Wall -Wextra -g -I$(INCLUDE_DIR)
 
 # Folder for object libraries and compiled library
-OBJ = obj
+OBJ ?= ../build
 OBJDIR = $(OBJ)/objects
 BIN = $(OBJ)/library.a
 
 # Source files
 SRC = $(wildcard *.c)
-SRC_2 = $(wildcard src/*.c)
+SRC_SRC = $(wildcard src/*.c)
 
 OBJS = $(addprefix $(OBJDIR)/, $(patsubst %.c, %.o, $(SRC)))
-OBJS += $(addprefix $(OBJDIR)/, $(patsubst src/%.c, %.o, $(SRC_2)))
+OBJS += $(addprefix $(OBJDIR)/, $(patsubst src/%.c, %.o, $(SRC_SRC)))
 
 # Path where to install library
 LIB_DIR ?= /usr/local/lib
@@ -54,5 +54,5 @@ install: $(BIN)
 	install -d $(INCLUDE_INSTALL_DIR)
 	rsync -a $(INCLUDE_DIR)/ $(INCLUDE_INSTALL_DIR)/
 	@echo "====> Configuring GCC"
-	echo $(LIB_DIR) | sudo tee /etc/ld.so.conf.d/freelibc.conf
+	echo $(LIB_DIR) | sudo tee /etc/ld.so.conf.d/librelib.conf
 	sudo ldconfig
