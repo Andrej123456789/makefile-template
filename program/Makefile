@@ -1,10 +1,13 @@
+INCLUDE_DIR ?= "include"
+
 CC = gcc
-CFLAGS = -g -llibrary
+CFLAGS = -g -I$(INCLUDE_DIR) -llibrary
 
 OBJ = obj
 
 OBJDIR = $(OBJ)/objects
 OBJS = $(addprefix $(OBJDIR)/, $(patsubst %.c, %.o, $(wildcard *.c)))
+OBJS += $(addprefix $(OBJDIR)/, $(patsubst src/%.c, %.o, $(wildcard src/*.c)))
 
 BINFOLDER = $(OBJ)
 BIN = $(BINFOLDER)/test
@@ -22,6 +25,9 @@ $(BIN) : $(OBJS)
 	$(CC) $(OBJS) -o $(BIN) $(CFLAGS)
 
 $(OBJDIR)/%.o : %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o : src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: run
